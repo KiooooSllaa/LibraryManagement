@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Librarian - Quản lý mượn trả</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+    <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+    <!-- Sidebar -->
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
+        <div class="sidenav-header">
+            <a class="navbar-brand px-4 py-3 m-0" href="#">
+                <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+                <span class="ms-1 text-sm text-dark">E-Libra</span>
+            </a>
+        </div>
+        <hr class="horizontal dark mt-0 mb-2">
+        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link bg-gradient-light text-dark" href="librarian.html">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Books</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active bg-gradient-dark text-white" href="#">
+                        <i class="material-symbols-rounded opacity-5">library_books</i>
+                        <span class="nav-link-text ms-1">Borrows</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <div class="container-fluid py-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-4">
+                        <div class="card-header p-3">
+                            <h6 class="mb-0">Danh sách ghi nhận mượn / trả sách</h6>
+                        </div>
+                        <div class="card-body px-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Người dùng</th>
+                                            <th>Sách</th>
+                                            <th class="text-center">Ngày mượn</th>
+                                            <th class="text-center">Trạng thái</th>
+                                            <th class="text-center">Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="borrowing-records"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- JS -->
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+
+        async function loadBorrowings() {
+            const res = await fetch("https://localhost:7250/api/Borrowings", {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const records = await res.json();
+
+            const tbody = document.getElementById("borrowing-records");
+            tbody.innerHTML = "";
+
+            records.forEach(record => {
+                let status = "";
+                let actions = "";
+
+                if (record.returnDate) {
+                    if (record.status != "Paid") {
+                        status = "<span class='badge bg-success'>Đã trả</span>";
+                    } else {
+                        status = "<span class='badge bg-success'>Đã Đền bù</span>";
+                    }
+                } else if (!record.librarianId) {
+                    status = "<span class='badge bg-warning text-dark'>Chờ duyệt</span>";
+                    actions = `<button class="btn btn-sm btn-primary" onclick="approveBorrowing(${record.id})">Chấp nhận</button><button class="btn btn-sm btn-danger" onclick="rejectBorrowing(${record.id})">Từ chối</button>`;
+                } else if (record.overdue) {
+                    status = "<span class='badge bg-danger'>Quá hạn</span>";
+                    actions = `<button class="btn btn-sm btn-success" onclick="returnBook(${record.id})">Đã trả</button>`;
+                } else if (record.librarianId == -1) {
+                    console.log(record.status);
+                    if (record.status != "Lost") {
+                        status = "<span class='badge bg-danger'>Đã từ chối</span>";
+                    } else {
+                        status = "<span class='badge bg-danger'>Bị mất / hỏng</span>";
+                    }
+                } else {
+                    status = "<span class='badge bg-info text-dark'>Đang mượn</span>";
+                    actions = `<button class="btn btn-sm btn-success" onclick="returnBook(${record.id})">Đã trả</button><button class="btn btn-sm btn-danger" onclick="lostBook(${record.id})">Báo Mất/Hỏng</button>`;
+                }
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                            <td>${record.userName}</td>
+                            <td>${record.bookTitle}</td>
+                            <td class="text-center">${new Date(record.borrowDate).toLocaleDateString()}</td>
+                            <td class="text-center">${status}</td>
+                            <td class="text-center">${actions}</td>
+                        `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function lostBook(id) {
+            if (confirm("Xác nhận đánh dấu mất/hỏng sách?")) {
+                const res = await fetch(`https://localhost:7250/api/Borrowings/lost-book/${id}`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    await loadBorrowings();
+                } else {
+                    alert("Lỗi khi duyệt.");
+                }
+            }
+        }
+
+        async function approveBorrowing(id) {
+            if (confirm("Xác nhận duyệt mượn sách?")) {
+                const res = await fetch(`https://localhost:7250/api/Borrowings/approve/${id}`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    await loadBorrowings();
+                } else {
+                    alert("Lỗi khi duyệt.");
+                }
+            }
+        }
+
+        async function rejectBorrowing(id) {
+            if (confirm("Xác nhận từ chối mượn sách?")) {
+                const res = await fetch(`https://localhost:7250/api/Borrowings/reject/${id}`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    await loadBorrowings();
+                } else {
+                    alert("Lỗi khi từ chối.");
+                }
+            }
+        }
+
+        async function returnBook(id) {
+            if (confirm("Xác nhận trả sách?")) {
+                const res = await fetch(`https://localhost:7250/api/Borrowings/return/${id}`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    await loadBorrowings();
+                } else {
+                    alert("Lỗi khi trả sách.");
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadBorrowings);
+    </script>
+</body>
+
+</html>

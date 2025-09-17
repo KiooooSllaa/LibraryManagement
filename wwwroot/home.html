@@ -1,0 +1,356 @@
+﻿<!DOCTYPE html>
+<style>
+    .order_online {
+        color: white;
+        border: 2px solid gold;
+        border-radius: 25px;
+        padding: 8px 16px;
+        display: inline-block;
+        font-weight: bold;
+        background: transparent;
+        cursor: pointer;
+    }
+
+        .order_online:hover {
+            background-color: gold;
+            color: black;
+        }
+</style>
+<html>
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="images/icons/favicon.ico" type="">
+
+    <title> Home </title>
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <!--owl slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <!-- nice select  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+    <!-- font awesome style -->
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css/responsive.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <div class="hero_area">
+        <div class="bg-box">
+            <img src="images/background_homepage.jpg" alt="">
+        </div>
+        <!-- header section strats -->
+        <header class="header_section">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg custom_nav-container ">
+                    <a class="navbar-brand" href="index.html">
+                        <span>
+                            E-Libra
+                        </span>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class=""> </span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav  mx-auto ">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="home.html">Home <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="status.html">Status</a>
+                            </li>
+                        </ul>
+                        <div href="" id="user-greeting" class="order_online">Đăng nhập</div>
+                        <button id="logout-btn" class="order_online">Logout</button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <!-- end header section -->
+        <!-- slider section -->
+        <section class="slider_section ">
+            <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="container ">
+                            <div class="row">
+                                <div class="col-md-7 col-lg-6 ">
+                                    <div class="detail-box">
+                                        <h1>
+                                            Digital library - A place to connect knowledge
+                                        </h1>
+                                        <p>
+                                            Helps users easily search for, borrow, and return books online; while also assisting administrators in tracking the status of books, history of borrowing and returning, and effectively and accurately statistics on library activities.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <!-- end slider section -->
+    </div>
+
+    <!-- offer section -->
+
+    <section class="offer_section layout_padding-bottom">
+        <div class="offer_container">
+            <div class="container ">
+                <div class="row">
+                    <div class="col-md-6  ">
+                        <div class="box ">
+                            <div class="img-box">
+                                <img src="images/harypoter.jpg" alt="">
+                            </div>
+                            <div class="detail-box">
+                                <h2>
+                                    Harry Potter
+                                </h2>
+                                <h5>
+                                    <span>Limit the quantity to 30 books</span>
+                                </h5>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6  ">
+                        <div class="box ">
+                            <div class="img-box">
+                                <img src="images/The-Lord-of-the-Rings-Book-Cover.jpg" alt="">
+                            </div>
+                            <div class="detail-box">
+                                <h2>
+                                    The Lord of the Rings
+                                </h2>
+                                <h5>
+                                    <span>Limit the quantity to 30 books</span>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+
+
+    <section class="food_section layout_padding-bottom">
+        <div class="container">
+            <div class="heading_container heading_center">
+                <h2>List of books</h2>
+            </div>
+
+            <ul class="filters_menu">
+                <li class="active" data-filter="*">All</li>
+                <li data-filter=".novel">Novel</li>
+                <li data-filter=".science">Science</li>
+                <li data-filter=".education">Education</li>
+                <li data-filter=".business">Business</li>
+                <li data-filter=".entertainment">Entertainment</li>
+            </ul>
+
+            <div class="filters-content">
+                <div class="row grid" id="book-list">
+                    <!-- Books will be injected here -->
+                </div>
+            </div>
+
+            <div class="btn-box">
+                <a href="#">View More</a>
+            </div>
+        </div>
+    </section>
+
+
+    <div id="borrowModal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%);
+background:white; padding:20px; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:1000; border-radius:10px; max-width:400px;">
+        <h4 id="modalTitle"></h4>
+        <p id="modalAuthor"></p>
+        <label>Borrow Date: </label>
+        <input type="date" id="borrowDate" class="form-control" /><br />
+        <label>Due Date: </label>
+        <input type="date" id="dueDate" class="form-control" /><br />
+        <button onclick="confirmBorrow()" class="btn btn-success">Confirm</button>
+        <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+    </div>
+
+
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script>
+        const rawUserId = localStorage.getItem("userId");
+        console.log("userId:", rawUserId);
+        const userId = rawUserId && !isNaN(rawUserId) ? parseInt(rawUserId) : null;
+        if (!userId) {
+            alert("Bạn chưa đăng nhập hoặc userId không hợp lệ!");
+            window.location.href = "index.html";
+        }
+
+
+        const rawUserName = localStorage.getItem("userName");
+        const userName = rawUserName && rawUserName.trim() !== "" ? rawUserName : null;
+        console.log("userName:", rawUserName);
+        if (userName) {
+            document.getElementById("user-greeting").textContent = "Hello, " + userName;
+        } else {
+            document.getElementById("user-greeting").textContent = "Đăng nhập";
+        }
+        const logoutBtn = document.getElementById("logout-btn");
+        logoutBtn.addEventListener("click", () => {
+            localStorage.clear();
+            window.location.href = "index.html";
+        });
+        const categoryClassMap = {
+            1: 'novel',
+            2: 'science',
+            3: 'education',
+            4: 'business',
+            5: 'entertainment'
+        };
+
+        let iso;
+        let selectedBookId = null;
+
+        async function loadBooks() {
+            try {
+                const res = await fetch("https://localhost:7250/api/books");
+                const books = await res.json();
+                const container = document.getElementById("book-list");
+                container.innerHTML = "";
+
+                books.forEach(book => {
+                    const categoryClass = categoryClassMap[book.categoryId] || "other";
+                    const imageUrl = book.imageUrl?.trim() || "images/default.jpg";
+
+                    const html = `
+                          <div class="col-sm-6 col-lg-4 all ${categoryClass}">
+                            <div class="box" onclick='openModal(${JSON.stringify(book)})'>
+                              <div>
+                                <div class="img-box">
+                                  <img src="${imageUrl}" alt="${book.title}" style="height:300px; object-fit:cover;">
+                                </div>
+                                <div class="detail-box">
+                                  <h5>${book.title}</h5>
+                                  <p><strong>By:</strong> ${book.authorName}</p>
+                                  <p><strong>Year:</strong> ${book.publishedYear}</p>
+                                  <p>${book.description}</p>
+                                  <div class="options"><h6>Free</h6></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        `;
+                    container.innerHTML += html;
+                });
+
+                iso = new Isotope('.grid', {
+                    itemSelector: '.all',
+                    layoutMode: 'fitRows'
+                });
+
+            } catch (err) {
+                console.error("Load failed:", err);
+                document.getElementById("book-list").innerHTML =
+                    "<p style='color:red'>Không tải được danh sách sách. Kiểm tra API.</p>";
+            }
+        }
+
+        loadBooks();
+        //pop-up mượn sách
+        document.addEventListener("DOMContentLoaded", function () {
+            const filters = document.querySelectorAll('.filters_menu li');
+            filters.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    filters.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const filterValue = this.getAttribute('data-filter');
+                    iso?.arrange({ filter: filterValue });
+                });
+            });
+
+            const today = new Date().toISOString().split('T')[0];
+            const due = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            document.getElementById("borrowDate").value = today;
+            document.getElementById("dueDate").value = due;
+        });
+
+        function openModal(book) {
+            selectedBookId = book.id;
+            document.getElementById("modalTitle").innerText = book.title;
+            document.getElementById("modalAuthor").innerText = "By " + book.authorName;
+
+            const today = new Date().toISOString().split('T')[0];
+            const due = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            document.getElementById("borrowDate").value = today;
+            document.getElementById("dueDate").value = due;
+
+            document.getElementById("borrowModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("borrowModal").style.display = "none";
+            selectedBookId = null;
+        }
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("borrowDate").min = today;
+        document.getElementById("dueDate").min = today;
+
+        document.getElementById("borrowDate").addEventListener("change", (e) => {
+            document.getElementById("dueDate").min = document.getElementById("borrowDate").value;
+        });
+
+        async function confirmBorrow() {
+            const borrowDate = document.getElementById("borrowDate").value;
+            const dueDate = document.getElementById("dueDate").value;
+
+            const record = {
+                userId: userId,
+                bookId: selectedBookId,
+                borrowDate: borrowDate,
+                dueDate: dueDate
+            };
+
+            try {
+                const res = await fetch("https://localhost:7250/api/BorrowRecords/Borrow", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(record)
+                });
+
+                if (res.ok) {
+                    alert("Mượn sách thành công!");
+                    closeModal();
+                } else {
+                    const errorText = await res.text();
+                    alert("Mượn thất bại: " + errorText);
+                }
+            } catch (err) {
+                console.error("Lỗi khi mượn sách:", err);
+                alert("Đã có lỗi xảy ra khi mượn sách.");
+            }
+        }
+    </script>
+
+</body>
+</html>

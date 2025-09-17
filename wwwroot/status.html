@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+
+        thead {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+            thead th {
+                padding: 12px;
+                text-align: left;
+            }
+
+        tbody td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        td[colspan="5"] {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+        }
+    </style>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="shortcut icon" href="images/icons/favicon.ico" type="">
+
+    <title> Home </title>
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <!--owl slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <!-- nice select  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+    <!-- font awesome style -->
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css/responsive.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container">
+        <h2>Borrowed Book Status</h2>
+        <table border="1" width="100%" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="statusTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const rawUserId = localStorage.getItem("userId");
+        const userId = rawUserId !== null && !isNaN(rawUserId) ? parseInt(rawUserId) : null;
+
+        if (!userId) {
+            alert("Bạn chưa đăng nhập hoặc userId không hợp lệ!");
+            window.location.href = "index.html";
+        }
+
+        async function loadBorrowedBooks() {
+            try {
+                const res = await fetch(`https://localhost:7250/api/BorrowRecords/User/${userId}`);
+                const records = await res.json();
+                const tbody = document.getElementById("statusTableBody");
+                tbody.innerHTML = "";
+
+                if (records.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Bạn chưa mượn sách nào.</td></tr>`;
+                    return;
+                }
+
+                records.forEach(r => {
+                    tbody.innerHTML += `
+                    <tr>
+                      <td>${r.title}</td>
+                      <td>${new Date(r.borrowDate).toLocaleDateString()}</td>
+                      <td>${new Date(r.dueDate).toLocaleDateString()}</td>
+                      <td>${r.returnDate ? new Date(r.returnDate).toLocaleDateString() : "Chưa trả"}</td>
+                      <td>${r.status}</td>
+                      <td>${r.status == "Mất Sách" ? "<button class=\"btn btn-sm btn-success\" onclick=\"PayUp(" + r.id + ")\">Đền Bù</button>" : ""}</td>
+                    </tr>
+                  `;
+                });
+            } catch (err) {
+                console.error("Lỗi khi tải trạng thái mượn:", err);
+                alert("Không thể tải trạng thái mượn sách.");
+            }
+        }
+        const token = localStorage.getItem("token");
+
+        async function PayUp(id) {
+                const res = await fetch(`https://localhost:7250/api/Borrowings/pay-up/${id}`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    loadBorrowedBooks();
+                } else {
+                    alert("Lỗi khi duyệt.");
+                }
+        }
+
+        loadBorrowedBooks();
+    </script>
+</body>
+</html>

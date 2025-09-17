@@ -1,0 +1,366 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Librarian</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+    <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+
+    <!-- Sidebar -->
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
+        <div class="sidenav-header">
+            <a class="navbar-brand px-4 py-3 m-0" href="https://localhost:7250/index.html">
+                <img src="../assets/img/logo-ct-dark.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+                <span class="ms-1 text-sm text-dark">E-Libra</span>
+            </a>
+        </div>
+        <hr class="horizontal dark mt-0 mb-2">
+        <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active bg-gradient-dark text-white" href="#">
+                        <i class="material-symbols-rounded opacity-5">table_view</i>
+                        <span class="nav-link-text ms-1">Books</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link bg-gradient-light text-dark" href="borrow.html">
+                        <i class="material-symbols-rounded opacity-5">library_books</i>
+                        <span class="nav-link-text ms-1">Borrows</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <div class="container-fluid py-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-4">
+                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center px-3">
+                                <h6 class="text-white text-capitalize m-0">Books Table</h6>
+                                <button class="btn btn-success btn-sm" onclick="openAddModal()">+ Thêm sách</button>
+                            </div>
+                        </div>
+                        <div class="card-body px-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Author</th>
+                                            <th class="text-center">Published Year</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-center">Available</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="book-inventory-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editBookModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <h5 class="modal-title">Chỉnh sửa sách</h5>
+                <form id="edit-book-form">
+                    <input type="hidden" id="edit-book-id">
+                    <div class="form-group mt-2">
+                        <label>Tiêu đề</label>
+                        <input type="text" class="form-control" id="edit-title" required>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Năm xuất bản</label>
+                        <input type="number" class="form-control" id="edit-year" required>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Ảnh bìa</label>
+                        <input type="file" class="form-control" id="edit-imageFile" accept="image/*" />
+                        <img id="preview-image" src="" style="max-width: 100px; margin-top: 10px;" />
+                    </div>
+                    <div class="text-end mt-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="addBookModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <h5 class="modal-title">Thêm sách mới</h5>
+                <form id="add-book-form">
+                    <div class="form-group mt-2">
+                        <label>Tiêu đề</label>
+                        <input type="text" class="form-control" id="add-title" required>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Tác giả</label>
+                        <select class="form-select" id="add-authorId" required>
+                            <option value="">-- Chọn tác giả --</option>
+                        </select>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Năm xuất bản</label>
+                        <input type="number" class="form-control" id="add-year" required>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Mô Tả</label>
+                        <textarea class="form-control" id="add-description" required></textarea>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Ảnh bìa</label>
+                        <input type="file" class="form-control" id="add-imageFile" accept="image/*" />
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Số lượng</label>
+                        <input type="number" class="form-control" id="add-copies" required>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label>Thể loại</label>
+                        <select class="form-select" id="add-categoryId" required>
+                            <option value="">-- Chọn thể loại --</option>
+                        </select>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        async function loadAuthorsAndCategories() {
+            const [authorsRes, categoriesRes] = await Promise.all([
+                fetch("https://localhost:7250/api/Authors"),
+                fetch("https://localhost:7250/api/Categories")
+            ]);
+
+            const authors = await authorsRes.json();
+            const categories = await categoriesRes.json();
+
+            const authorSelect = document.getElementById("add-authorId");
+            const categorySelect = document.getElementById("add-categoryId");
+
+            // Clear and populate authors
+            authorSelect.innerHTML = '<option value="">-- Chọn tác giả --</option>';
+            authors.forEach(author => {
+                const option = document.createElement("option");
+                option.value = author.id;
+                option.textContent = author.name;
+                authorSelect.appendChild(option);
+            });
+
+            // Clear and populate categories
+            categorySelect.innerHTML = '<option value="">-- Chọn thể loại --</option>';
+            categories.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category.id;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+        }
+        async function loadBookInventory() {
+            try {
+                const response = await fetch("https://localhost:7250/api/Books/with-inventory");
+                const books = await response.json();
+
+                const tableBody = document.getElementById("book-inventory-table-body");
+                tableBody.innerHTML = "";
+
+                books.forEach(book => {
+                    const row = `
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div>
+                        <img src="${book.imageUrl || '../assets/img/default.jpg'}" class="avatar avatar-sm me-3 border-radius-lg" alt="${book.title}">
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">${book.title}</h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td><p class="text-xs font-weight-bold mb-0">${book.authorName}</p></td>
+                  <td class="text-center">${book.publishedYear ?? 'N/A'}</td>
+                  <td class="text-center">${book.totalCopies}</td>
+                  <td class="text-center">${book.availableCopies}</td>
+                  <td>
+                    <a href="#" class="text-primary me-2" onclick='editBook(${JSON.stringify(book)})'>Edit</a>
+                    <a href="#" class="text-danger" onclick='deleteBook(${book.id})'>Delete</a>
+                  </td>
+                </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (err) {
+                console.error("Failed to load inventory:", err);
+                document.getElementById("book-inventory-table-body").innerHTML = "<tr><td colspan='6'>Lỗi khi tải dữ liệu</td></tr>";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadBookInventory);
+
+        // Show edit modal
+        function editBook(book) {
+            document.getElementById("edit-book-id").value = book.id;
+            document.getElementById("edit-title").value = book.title || "";
+            document.getElementById("edit-year").value = book.publishedYear || "";
+            document.getElementById("preview-image").src = book.imageUrl || "";
+            document.getElementById("preview-image").style.display = book.imageUrl ? "block" : "none";
+
+            new bootstrap.Modal(document.getElementById('editBookModal')).show();
+        }
+
+        document.getElementById("edit-imageFile").addEventListener("change", function (e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById("preview-image");
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    preview.src = evt.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+                preview.style.display = "none";
+            }
+        });
+
+        // Submit edit form
+        document.getElementById("edit-book-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+
+            let imageUrl = null;
+            const imageFile = document.getElementById("edit-imageFile").files[0];
+
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append("image", imageFile);
+
+                const uploadRes = await fetch("https://localhost:7250/api/Books/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!uploadRes.ok) {
+                    alert("Lỗi khi tải ảnh.");
+                    return;
+                }
+
+                const uploadResult = await uploadRes.json();
+                imageUrl = uploadResult.imageUrl;
+            }
+
+            const id = document.getElementById("edit-book-id").value;
+            const data = {
+                title: document.getElementById("edit-title").value,
+                publishedYear: parseInt(document.getElementById("edit-year").value),
+                imageUrl: imageUrl
+            };
+            const res = await fetch(`https://localhost:7250/api/Books/update/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('editBookModal')).hide();
+                loadBookInventory();
+            } else {
+                alert("Lỗi khi cập nhật.");
+            }
+        });
+
+        // Show add modal
+        function openAddModal() {
+            loadAuthorsAndCategories();
+            new bootstrap.Modal(document.getElementById('addBookModal')).show();
+        }
+
+        // Submit add form
+        document.getElementById("add-book-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            let imageUrl = "";
+            const imageFile = document.getElementById("add-imageFile").files[0];
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append("image", imageFile);
+
+                const uploadRes = await fetch("https://localhost:7250/api/Books/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!uploadRes.ok) {
+                    alert("Lỗi khi tải ảnh.");
+                    return;
+                }
+
+                const uploadResult = await uploadRes.json();
+                imageUrl = uploadResult.imageUrl;
+            }
+            const data = {
+                title: document.getElementById("add-title").value,
+                authorId: parseInt(document.getElementById("add-authorId").value),
+                publishedYear: parseInt(document.getElementById("add-year").value),
+                imageUrl: imageUrl,
+                description: document.getElementById("add-description").value,
+                categoryId: parseInt(document.getElementById("add-categoryId").value),
+                totalCopies: parseInt(document.getElementById("add-copies").value)
+            };
+            const res = await fetch("https://localhost:7250/api/Books", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('addBookModal')).hide();
+                loadBookInventory();
+            } else {
+                alert("Lỗi khi thêm sách.");
+            }
+        });
+
+        // Delete
+        async function deleteBook(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa sách này?")) {
+                const res = await fetch(`https://localhost:7250/api/Books/${id}`, { method: "DELETE" });
+                if (res.ok) loadBookInventory();
+                else alert("Lỗi khi xóa.");
+            }
+        }
+    </script>
+</body>
+
+</html>
